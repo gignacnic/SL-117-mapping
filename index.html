@@ -1,0 +1,261 @@
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Ebola Emergency Hotline inbound calls</title>
+  <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.11/themes/css/cartodb.css" />
+  <script src="http://libs.cartocdn.com/cartodb.js/v3/3.11/cartodb.js"></script>
+  <script src='https://code.jquery.com/jquery-1.11.0.min.js'></script>
+   <link rel="stylesheet" type="text/css" href="styles.css" media="all" />
+    <link rel="stylesheet" href="iThing.css" type="text/css" />
+  <style>
+    html, body {width:100%; height:100%; padding: 0; margin: 0;}
+    #map { width: 100%; height:100%; background: black;}
+    #menu { position: absolute; top: 100px; right: 10px; width: 500px; height:60px; background: transparent; z-index:10;}
+    #menu a { 
+      margin: 15px 10px 0 0;
+      float: right;
+      vertical-align: baseline;
+      width: 70px;
+      padding: 10px;
+      text-align: center;
+      font: bold 11px "Helvetica",Arial;
+      line-height: normal;
+      color: #555;
+      border-radius: 4px;
+      border: 1px solid #777777;
+      background: #ffffff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    #menu a.selected,
+    #menu a:hover { 
+      color: #F84F40;
+    }
+	
+	  #layer_selector {
+        position: absolute;
+        top: 110px;
+        left: 15px;
+        padding: 0;
+      }
+      #layer_selector ul {
+        padding: 0; margin: 0;
+        list-style-type: none;
+      }
+      #layer_selector li {
+        border-bottom: 1px solid #999;
+        padding: 5px 10px;
+        font-family: "Helvetica", Arial;
+        font-size: 13px;
+        color: #444;
+        cursor: auto;
+      }
+      #layer_selector li:hover {
+        background-color: #F0F0F0;
+        cursor: pointer;
+      }
+      #layer_selector li.selected {
+        background-color: #EEE;
+      }
+  </style>
+
+  <script>
+  var map;
+  function init(){
+    // initiate leaflet map
+    map = new L.Map('map', { 
+      center: [8.5,-11.9],
+      zoom: 8
+    })
+
+    L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {
+      attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
+    }).addTo(map);
+
+	var sublayers = [];
+
+	var sqlQuery = "SELECT cartodb_id, the_geom, the_geom_webmercator, province, chiefdom, district, section_, f2014_fema, f2014_male, f2014_tota, hhs, jan12_jan18, jan19_jan25, COALESCE(((jan19_jan25-jan12_jan18)*100)/nullif(jan12_jan18, 0), 0) AS \"jan12_jan18_vs_jan19_jan25\", CONCAT(section_,': ', COALESCE(((jan19_jan25-jan12_jan18)*100)/nullif(jan12_jan18, 0), 0),'%') AS \"Map label\" FROM sl_population_density_2014_merge2";
+	
+  // create district selector
+  function createSelector(layer) {
+	var sql = new cartodb.SQL({ user: 'ehealthafrica' });
+	var $options = $('#layer_selector li');
+	$options.click(function(e) {
+	  // get the area of the selected layer
+	  var $li = $(e.target);
+	  var area = $li.attr('data');
+	  // deselect all and select the clicked one
+	  $options.removeClass('selected');
+	  $li.addClass('selected');
+	  // create query based on data from the layer
+	  var query = sqlQuery;
+	  if(area !== 'all') {
+		query = sqlQuery + " where district = '" + area + "'";
+	  }
+	  // change the query in the layer to update the map
+	  layer.setSQL(query);
+
+	  // update the map view extent
+		var queryBounds = sql.getBounds(query).done(function(bounds) {
+				map.fitBounds(bounds);
+		});
+	});
+  }
+
+	// create array with the layers
+  var layerSource = {
+	user_name: 'ehealthafrica',
+	type: 'cartodb',
+	sublayers: [{
+	  sql: sqlQuery,
+	  cartocss: "#sl_population_density_2014_merge2{   polygon-fill: #1a9850;   polygon-opacity: 0.6;   line-color: #FFF;   line-width: 1;   line-opacity: 1; } #sl_population_density_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= 10000] {    polygon-fill: #d73027; } #sl_population_density_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= 66] {    polygon-fill: #f79272; } #sl_population_density_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= 33] {    polygon-fill: #fed6b0; } #sl_population_density_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= 0] {    polygon-fill: #fff2cc; } #sl_population_density_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= -1] {    polygon-fill: #d2ecb4; } #sl_population_density_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= -33] {    polygon-fill: #8cce8a; } #sl_population_density_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= -66] {    polygon-fill: #1a9850; }                     #sl_population_density_2014_merge2::labels {  text-name: [Map label];  text-face-name: 'DejaVu Sans Book';  text-size: 11;  text-label-position-tolerance: 10;  text-fill: #000;  text-halo-fill: #FFF;  text-halo-radius: 1;  text-dy: 0;  text-allow-overlap: false;  text-placement: point;  text-placement-type: simple;}"
+	},
+	{
+	  sql: "SELECT * FROM netfuse_inbound_calls_20150119_20150125",
+	  cartocss: "#netfuse_inbound_calls_20150119_20150125 {   marker-fill-opacity: 0.9;   marker-line-color: #FFF;   marker-line-width: 1.5;   marker-line-opacity: 1;   marker-placement: point;   marker-type: ellipse;   marker-width: 10;   marker-allow-overlap: true;}#netfuse_inbound_calls_20150119_20150125[type='death'] {   marker-fill: #081B47;}#netfuse_inbound_calls_20150119_20150125[type='suspect'] {   marker-fill: #a6cee3;}#netfuse_inbound_calls_20150119_20150125[type='sick'] {   marker-fill: #B2DF8A;}#netfuse_inbound_calls_20150119_20150125[type='quarantine'] {   marker-fill: #33A02C;}"
+	},
+	{
+	  sql: "SELECT * FROM sl_ecf_update_17_01_15",
+	  cartocss: "#sl_ecf_update_17_01_15{  marker-file: url(http://com.cartodb.users-assets.production.s3.amazonaws.com/pin-maps/pins3.svg);  marker-fill-opacity: 0.9;  marker-line-color: #FFF;  marker-line-width: 1.5;  marker-line-opacity: 1;  marker-placement: point;  marker-type: ellipse;  marker-width: 9.5;  marker-fill: #850200;  marker-allow-overlap: true;  marker-comp-op: multiply;}#sl_ecf_update_17_01_15::labels {  text-name: [ecf_name];  text-face-name: 'DejaVu Sans Book';  text-size: 9;  text-label-position-tolerance: 10;  text-fill: #850200;  text-halo-fill: #FFF;  text-halo-radius: 1;  text-dy: -9.5;  text-allow-overlap: false;  text-placement: point;  text-placement-type: simple;}"
+	}]
+	}
+		  
+	cartodb.createLayer(map, layerSource)
+	  .addTo(map)
+	  .on('done', function(layer) {
+		
+		for (var i = 0; i < layer.getSubLayerCount(); i++) {
+            sublayers[i] = layer.getSubLayer(i);
+			//alert("Congrats, you added sublayer #" + i + "!");
+		}
+		
+		createSelector(sublayers[0]);
+		
+		var legendCallType = new cdb.geo.ui.Legend({
+           type: "custom",
+           data: [
+             { name: "Death", value: "#081B47" },
+             { name: "Suspect", value: "#a6cee3" },
+             { name: "Sick", value: "#B2DF8A" },
+             { name: "Qurantine", value: "#33A02C" }
+           ]
+		});
+		
+		// creating legends and add legend to map
+		var legendIncrease = new cdb.geo.ui.Legend({
+           type: "choropleth",
+           data: [
+             { value: "-100%" },
+             { value: "+100%" },
+			 { name: "color7", value: "#1a9850" },
+			 { name: "color6", value: "#8cce8a" },
+			 { name: "color5", value: "#d2ecb4" },
+			 { name: "color4", value: "#fff2cc" },
+			 { name: "color3", value: "#fed6b0" },
+			 { name: "color2", value: "#f79272" },
+             { name: "color1", value: "#d73027" }
+           ]
+		});	
+		var stackedLegend = new cdb.geo.ui.StackedLegend({
+           legends: [legendCallType, legendIncrease]
+         }); 
+        $('#map').append(stackedLegend.render().el);
+		
+	  }).on('error', function() {
+		//log the error
+	  });
+	 
+	 
+	//Create call type selector
+	var LayerActions = {
+	  death: function(){
+		sublayers[1].setSQL("SELECT * FROM netfuse_inbound_calls_20150119_20150125 where type = 'death'");
+		return true;
+	  },
+	  sick: function(){
+		sublayers[1].setSQL("SELECT * FROM netfuse_inbound_calls_20150119_20150125 where type = 'sick'");
+		return true;
+	  },
+	  suspect: function(){
+		sublayers[1].setSQL("SELECT * FROM netfuse_inbound_calls_20150119_20150125 where type = 'suspect'");
+		return true;
+	  },
+	  quarantine: function(){
+		sublayers[1].setSQL("SELECT * FROM netfuse_inbound_calls_20150119_20150125 where type = 'quarantine'");
+		return true;
+	  }
+	}	  
+	$('.button').click(function() {
+	  $('.button').removeClass('selected');
+	  $(this).addClass('selected');
+	  LayerActions[$(this).attr('id')]();
+	});
+	
+  }
+  </script>
+</head>
+
+<body onload="init()">
+
+ <table border=0 width="100%" height="90%" celpadding=5>
+
+      <tr>
+        <td colspan=2 class="headerbar">
+          <img src="http://ehealthafrica.org/wp-content/uploads/styx/1345117248_eHealth_logo_h96.png" height=48>
+          <img src="http://www.netfuse.net/images/logo.png" style="float:right">
+        </td>
+      </tr>
+	  
+      <tr>
+        <td width="160" rowspan=2 valign=top>
+          <div id="controls" rowspan="2">
+
+	<div id="layer_selector" class="cartodb-infobox">
+      <ul>
+		<li data="all" class="selected">All districts</li>
+		<li data="Bo">Bo</li>
+		<li data="Bombali">Bombali</li>
+		<li data="Bonthe">Bonthe</li>
+		<li data="Kailahun">Kailahun</li>
+		<li data="Kambia">Kambia</li>
+		<li data="Kenema">Kenema</li>
+		<li data="Koinadugu">Koinadugu</li>
+		<li data="Kono">Kono</li>
+		<li data="Moyamba">Moyamba</li>
+		<li data="Port Loko">Port Loko</li>
+		<li data="Pujehun">Pujehun</li>
+		<li data="Tonkolili">Tonkolili</li>
+		<li data="Western Area Rur">Western Area Rural</li>
+		<li data="Western Area Urb">Western Area Urban</li>
+      </ul>
+    </div>	  
+		  
+<!--             <b>Case types:</b><br />
+            <div id="legend"></div>
+            <br />
+
+            <b>Options:</b><br />
+            <input name="noise" type="checkbox">Noise</input>
+	    <br />
+	    <input name="heatmap" type="checkbox" checked onchange="ebolaMap.toggleLayer('heatmap')">Heatmap</input>
+
+	    <br />
+	    <br />
+            <div id="loading">LOADING</div> -->
+          </div>
+        </td>
+        <td width="" height="100%">	  
+
+  <div id='map'></div>
+   <div id='menu'>
+    <a href="#death" id="death" class="button death">Death</a> 
+	<a href="#sick" id="sick" class="button sick">Sick</a> 
+    <a href="#suspect" id="suspect" class="button suspect">Suspect</a> 
+    <a href="#quarantine" id="quarantine" class="button quarantine">Quarantine</a>
+  </div>
+   
+          </td>
+      </tr>
+    </table>
+</body>
+</html>
