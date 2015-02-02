@@ -57,6 +57,35 @@
       #layer_selector li.selected {
         background-color: #EEE;
       }
+	  #choropleth_selector {
+        position: absolute;
+        top: 110px;
+        right: 20px;
+        padding: 0;
+      }
+
+      #choropleth_selector ul {
+        padding: 0; margin: 0;
+        list-style-type: none;
+      }
+
+      #choropleth_selector li {
+        border-bottom: 1px solid #999;
+        padding: 5px 10px;
+        font-family: "Helvetica", Arial;
+        font-size: 13px;
+        color: #444;
+        cursor: auto;
+      }
+
+      #choropleth_selector li:hover {
+        background-color: #F0F0F0;
+        cursor: pointer;
+      }
+
+      #choropleth_selector li.selected {
+        background-color: #EEE;
+      }
   </style>
 
   <script>
@@ -77,7 +106,7 @@
 	var sqlQuery = "SELECT cartodb_id, the_geom, the_geom_webmercator, province, chiefdom, district, f2014_Fema, f2014_Male, f2014_Tota, jan12_jan18, jan19_jan25, COALESCE(((jan19_jan25-jan12_jan18)*100)/nullif(jan12_jan18, 0), 0) AS \"jan12_jan18_vs_jan19_jan25\", CONCAT(chiefdom,': ', COALESCE(((jan19_jan25-jan12_jan18)*100)/nullif(jan12_jan18, 0), 0),'%') AS \"Map label\" FROM sl_chiefdom_population_2014_merge2";
 	
   // create district selector
-  function createSelector(layer) {
+  function createSelectorDistrict(layer) {
 	var sql = new cartodb.SQL({ user: 'ehealthafrica' });
 	var $options = $('#layer_selector li');
 	$options.click(function(e) {
@@ -100,6 +129,28 @@
 				map.fitBounds(bounds);
 		});
 	});
+  }
+  
+  // create choropleth selector
+  function createSelectorChoropleth(layer) {
+	var $options = $('#choropleth_selector li');
+	$options.click(function(e) {
+		  // get the choropleth type
+		  var $li = $(e.target);
+		  var type = $li.attr('data');
+		  // deselect all and select the clicked one
+		  $options.removeClass('selected');
+		  $li.addClass('selected');
+		  // create query based on data from the layer
+		  if(type == 'calls') {
+			layer.set({cartocss: "#sl_chiefdom_population_2014_merge2{   polygon-fill: #1a9850;   polygon-opacity: 0.6;   line-color: #FFF;   line-width: 1;   line-opacity: 1; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= 10000] {    polygon-fill: #d73027; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= 66] {    polygon-fill: #f79272; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= 33] {    polygon-fill: #fed6b0; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= 0] {    polygon-fill: #fff2cc; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= -1] {    polygon-fill: #d2ecb4; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= -33] {    polygon-fill: #8cce8a; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= -66] {    polygon-fill: #1a9850; }                     #sl_chiefdom_population_2014_merge2::labels {  text-name: [Map label];  text-face-name: 'DejaVu Sans Book';  text-size: 11;  text-label-position-tolerance: 10;  text-fill: #000;  text-halo-fill: #FFF;  text-halo-radius: 1;  text-dy: 0;  text-allow-overlap: false;  text-placement: point;  text-placement-type: simple;}"
+			})
+		  };
+		  if(type == 'population') {
+			layer.set({cartocss: "#sl_chiefdom_population_2014_merge2{  polygon-fill: #ECF0F6;  polygon-opacity: 0.6;  line-color: #FFF;  line-width: 1;  line-opacity: 1;}#sl_chiefdom_population_2014_merge2 [ f2014_tota <= 378041] {   polygon-fill: #43618F;}#sl_chiefdom_population_2014_merge2 [ f2014_tota <= 57196] {   polygon-fill: #4E71A6;}#sl_chiefdom_population_2014_merge2 [ f2014_tota <= 38373] {   polygon-fill: #6182B5;}#sl_chiefdom_population_2014_merge2 [ f2014_tota <= 30196] {   polygon-fill: #849EC5;}#sl_chiefdom_population_2014_merge2 [ f2014_tota <= 23640] {   polygon-fill: #9BB0D0;}#sl_chiefdom_population_2014_merge2 [ f2014_tota <= 16340] {   polygon-fill: #B2C2DB;}#sl_chiefdom_population_2014_merge2 [ f2014_tota <= 10650] {   polygon-fill: #ECF0F6;}#sl_chiefdom_population_2014_merge2::labels {  text-name: [Map label];  text-face-name: 'DejaVu Sans Book';  text-size: 11;  text-label-position-tolerance: 10;  text-fill: #000;  text-halo-fill: #FFF;  text-halo-radius: 1;  text-dy: 0;  text-allow-overlap: false;  text-placement: point;  text-placement-type: simple;}"
+			})
+		  };
+		});
   }
 
 	// create array with the layers
@@ -129,15 +180,17 @@
 			//alert("Congrats, you added sublayer #" + i + "!");
 		}
 		
-		createSelector(sublayers[0]);
+		createSelectorDistrict(sublayers[0]);
+		
+		createSelectorChoropleth(sublayers[0]);
 		
 		var legendCallType = new cdb.geo.ui.Legend({
            type: "custom",
            data: [
-             { name: "Death", value: "#081B47" },
-             { name: "Suspect", value: "#a6cee3" },
-             { name: "Sick", value: "#B2DF8A" },
-             { name: "Qurantine", value: "#33A02C" }
+             { name: "Death (Jan19-Jan25)", value: "#081B47" },
+             { name: "Suspect (Jan19-Jan25)", value: "#a6cee3" },
+             { name: "Sick (Jan19-Jan25)", value: "#B2DF8A" },
+             { name: "Quarantine (Jan19-Jan25)", value: "#33A02C" }
            ]
 		});
 		
@@ -229,7 +282,14 @@
 		<li data="Western Area Urb">Western Area Urban</li>
       </ul>
     </div>	  
-		  
+
+    <div id="choropleth_selector" class="cartodb-infobox">
+      <ul>
+        <li data="calls">Call count (Jan12-18 vs Jan19-25)</li>
+        <li data="population">Total population</li>
+      </ul>
+    </div>
+	
 <!--             <b>Case types:</b><br />
             <div id="legend"></div>
             <br />
