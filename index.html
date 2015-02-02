@@ -87,7 +87,7 @@
         background-color: #EEE;
       }
   </style>
-
+  
   <script>
   var map;
   function init(){
@@ -183,14 +183,16 @@
 		createSelectorDistrict(sublayers[0]);
 		
 		createSelectorChoropleth(sublayers[0]);
+
+		cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), ['province', 'chiefdom', 'district', 'f2014_fema', 'f2014_male', 'f2014_tota', 'jan12_jan18', 'jan19_jan25'])		 
 		
 		var legendCallType = new cdb.geo.ui.Legend({
            type: "custom",
            data: [
-             { name: "Death (Jan19-Jan25)", value: "#081B47" },
-             { name: "Suspect (Jan19-Jan25)", value: "#a6cee3" },
-             { name: "Sick (Jan19-Jan25)", value: "#B2DF8A" },
-             { name: "Quarantine (Jan19-Jan25)", value: "#33A02C" }
+            { name: "Death (Jan19-Jan25)", value: "#081B47" },
+            { name: "Suspect (Jan19-Jan25)", value: "#a6cee3" },
+            { name: "Sick (Jan19-Jan25)", value: "#B2DF8A" },
+            { name: "Quarantine (Jan19-Jan25)", value: "#33A02C" }
            ]
 		});
 		
@@ -206,7 +208,7 @@
 			 { name: "color4", value: "#fff2cc" },
 			 { name: "color3", value: "#fed6b0" },
 			 { name: "color2", value: "#f79272" },
-             		 { name: "color1", value: "#d73027" }
+             { name: "color1", value: "#d73027" }
            ]
 		});	
 		var stackedLegend = new cdb.geo.ui.StackedLegend({
