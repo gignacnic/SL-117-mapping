@@ -220,24 +220,52 @@
 		//log the error
 	  });
 	 
-	 
+	var layer_init = false ; 
+	var sql_global_type = 'SELECT * FROM netfuse_inbound_calls_20150119_20150125 where ';
 	//Create call type selector
 	var LayerActions = {
+
 	  death: function(){
-		sublayers[1].setSQL("SELECT * FROM netfuse_inbound_calls_20150119_20150125 where type = 'death'");
-		return true;
+	  if (layer_init == false) {
+	  	query = "type = 'death'";
+	  }else{
+	  	query = query + " OR type = 'death' ";
+	  }		
+		layer_init = true ;
+		sublayers[1].setSQL(sql_global_type + query);
+		//return true, layer_init;
+		return layer_init;
 	  },
 	  sick: function(){
-		sublayers[1].setSQL("SELECT * FROM netfuse_inbound_calls_20150119_20150125 where type = 'sick'");
-		return true;
+	  if (layer_init == false) {
+	  	query = "type = 'sick'";
+	  }else{
+	  	query = query + " OR type = 'sick' ";
+	  }
+		sublayers[1].setSQL(sql_global_type + query);
+		layer_init = true ;
+		return layer_init;
 	  },
 	  suspect: function(){
-		sublayers[1].setSQL("SELECT * FROM netfuse_inbound_calls_20150119_20150125 where type = 'suspect'");
-		return true;
+	  if (layer_init == false) {
+	  	query = "type = 'suspect'";
+	  }else{
+	  	query = query + " OR type = 'suspect' ";
+	  }
+		sublayers[1].setSQL(sql_global_type + query);
+		layer_init = true ;
+		return layer_init;
 	  },
 	  quarantine: function(){
-		sublayers[1].setSQL("SELECT * FROM netfuse_inbound_calls_20150119_20150125 where type = 'quarantine'");
-		return true;
+	  if (layer_init == false) {
+	  	query = "type = 'quarantine'";
+	  }else{
+	  	query = query + " OR type = 'quarantine' ";
+	  }
+		sublayers[1].setSQL(sql_global_type + query);
+		layer_init = true ;
+		return layer_init;
+		
 	  }
 	}	  
 	$('.button').click(function() {
