@@ -102,7 +102,7 @@
 
 	var sublayers = [];
 
-	var sqlQuery = "SELECT cartodb_id, the_geom, the_geom_webmercator, province, chiefdom, district, f2014_Fema, f2014_Male, f2014_Tota, jan12_jan18, jan19_jan25, COALESCE(((jan19_jan25-jan12_jan18)*100)/nullif(jan12_jan18, 0), 0) AS \"jan12_jan18_vs_jan19_jan25\", CONCAT(chiefdom,': ', COALESCE(((jan19_jan25-jan12_jan18)*100)/nullif(jan12_jan18, 0), 0),'%') AS \"Map label\" FROM sl_chiefdom_population_2014_merge2";
+	var sqlQuery = "SELECT cartodb_id, the_geom, the_geom_webmercator, province, chiefdom, district, f2014_Fema, f2014_Male, f2014_Tota, jan18_jan24, jan25_jan31, COALESCE(((jan25_jan31-jan18_jan24)*100)/nullif(jan18_jan24, 0), 0) AS \"jan18_jan24_vs_jan25_jan31\", CONCAT(chiefdom,': ', COALESCE(((jan25_jan31-jan18_jan24)*100)/nullif(jan18_jan24, 0), 0),'%') AS \"Map label\" FROM sl_chiefdom_population_2014_merge4";
 	
   // create district selector
   function createSelectorDistrict(layer) {
@@ -142,11 +142,11 @@
 		  $li.addClass('selected');
 		  // create query based on data from the layer
 		  if(type == 'calls') {
-			layer.set({cartocss: "#sl_chiefdom_population_2014_merge2{   polygon-fill: #1a9850;   polygon-opacity: 0.6;   line-color: #FFF;   line-width: 1;   line-opacity: 1; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= 10000] {    polygon-fill: #d73027; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= 66] {    polygon-fill: #f79272; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= 33] {    polygon-fill: #fed6b0; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= 0] {    polygon-fill: #fff2cc; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= -1] {    polygon-fill: #d2ecb4; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= -33] {    polygon-fill: #8cce8a; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= -66] {    polygon-fill: #1a9850; }                     #sl_chiefdom_population_2014_merge2::labels {  text-name: [Map label];  text-face-name: 'DejaVu Sans Book';  text-size: 11;  text-label-position-tolerance: 10;  text-fill: #000;  text-halo-fill: #FFF;  text-halo-radius: 1;  text-dy: 0;  text-allow-overlap: false;  text-placement: point;  text-placement-type: simple;}"
+			layer.set({cartocss: "#sl_chiefdom_population_2014_merge4{   polygon-fill: #1a9850;   polygon-opacity: 0.6;   line-color: #FFF;   line-width: 1;   line-opacity: 1; } #sl_chiefdom_population_2014_merge4 [ jan18_jan24_vs_jan25_jan31 <= 10000] {    polygon-fill: #d73027; } #sl_chiefdom_population_2014_merge4 [ jan18_jan24_vs_jan25_jan31 <= 66] {    polygon-fill: #f79272; } #sl_chiefdom_population_2014_merge4 [ jan18_jan24_vs_jan25_jan31 <= 33] {    polygon-fill: #fed6b0; } #sl_chiefdom_population_2014_merge4 [ jan18_jan24_vs_jan25_jan31 <= 0] {    polygon-fill: #fff2cc; } #sl_chiefdom_population_2014_merge4 [ jan18_jan24_vs_jan25_jan31 <= -1] {    polygon-fill: #d2ecb4; } #sl_chiefdom_population_2014_merge4 [ jan18_jan24_vs_jan25_jan31 <= -33] {    polygon-fill: #8cce8a; } #sl_chiefdom_population_2014_merge4 [ jan18_jan24_vs_jan25_jan31 <= -66] {    polygon-fill: #1a9850; }                     #sl_chiefdom_population_2014_merge4::labels {  text-name: [Map label];  text-face-name: 'DejaVu Sans Book';  text-size: 11;  text-label-position-tolerance: 10;  text-fill: #000;  text-halo-fill: #FFF;  text-halo-radius: 1;  text-dy: 0;  text-allow-overlap: false;  text-placement: point;  text-placement-type: simple;}"
 			})
 		  };
 		  if(type == 'population') {
-			layer.set({cartocss: "#sl_chiefdom_population_2014_merge2{  polygon-fill: #ECF0F6;  polygon-opacity: 0.6;  line-color: #FFF;  line-width: 1;  line-opacity: 1;}#sl_chiefdom_population_2014_merge2 [ f2014_tota <= 378041] {   polygon-fill: #43618F;}#sl_chiefdom_population_2014_merge2 [ f2014_tota <= 57196] {   polygon-fill: #4E71A6;}#sl_chiefdom_population_2014_merge2 [ f2014_tota <= 38373] {   polygon-fill: #6182B5;}#sl_chiefdom_population_2014_merge2 [ f2014_tota <= 30196] {   polygon-fill: #849EC5;}#sl_chiefdom_population_2014_merge2 [ f2014_tota <= 23640] {   polygon-fill: #9BB0D0;}#sl_chiefdom_population_2014_merge2 [ f2014_tota <= 16340] {   polygon-fill: #B2C2DB;}#sl_chiefdom_population_2014_merge2 [ f2014_tota <= 10650] {   polygon-fill: #ECF0F6;}#sl_chiefdom_population_2014_merge2::labels {  text-name: [Map label];  text-face-name: 'DejaVu Sans Book';  text-size: 11;  text-label-position-tolerance: 10;  text-fill: #000;  text-halo-fill: #FFF;  text-halo-radius: 1;  text-dy: 0;  text-allow-overlap: false;  text-placement: point;  text-placement-type: simple;}"
+			layer.set({cartocss: "#sl_chiefdom_population_2014_merge4{  polygon-fill: #ECF0F6;  polygon-opacity: 0.6;  line-color: #FFF;  line-width: 1;  line-opacity: 1;}#sl_chiefdom_population_2014_merge4 [ f2014_tota <= 378041] {   polygon-fill: #43618F;}#sl_chiefdom_population_2014_merge4 [ f2014_tota <= 57196] {   polygon-fill: #4E71A6;}#sl_chiefdom_population_2014_merge4 [ f2014_tota <= 38373] {   polygon-fill: #6182B5;}#sl_chiefdom_population_2014_merge4 [ f2014_tota <= 30196] {   polygon-fill: #849EC5;}#sl_chiefdom_population_2014_merge4 [ f2014_tota <= 23640] {   polygon-fill: #9BB0D0;}#sl_chiefdom_population_2014_merge4 [ f2014_tota <= 16340] {   polygon-fill: #B2C2DB;}#sl_chiefdom_population_2014_merge4 [ f2014_tota <= 10650] {   polygon-fill: #ECF0F6;}#sl_chiefdom_population_2014_merge4::labels {  text-name: [Map label];  text-face-name: 'DejaVu Sans Book';  text-size: 11;  text-label-position-tolerance: 10;  text-fill: #000;  text-halo-fill: #FFF;  text-halo-radius: 1;  text-dy: 0;  text-allow-overlap: false;  text-placement: point;  text-placement-type: simple;}"
 			})
 		  };
 		});
@@ -158,11 +158,11 @@
 	type: 'cartodb',
 	sublayers: [{
 	  sql: sqlQuery,
-	  cartocss: "#sl_chiefdom_population_2014_merge2{   polygon-fill: #1a9850;   polygon-opacity: 0.6;   line-color: #FFF;   line-width: 1;   line-opacity: 1; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= 10000] {    polygon-fill: #d73027; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= 66] {    polygon-fill: #f79272; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= 33] {    polygon-fill: #fed6b0; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= 0] {    polygon-fill: #fff2cc; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= -1] {    polygon-fill: #d2ecb4; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= -33] {    polygon-fill: #8cce8a; } #sl_chiefdom_population_2014_merge2 [ jan12_jan18_vs_jan19_jan25 <= -66] {    polygon-fill: #1a9850; }                     #sl_chiefdom_population_2014_merge2::labels {  text-name: [Map label];  text-face-name: 'DejaVu Sans Book';  text-size: 11;  text-label-position-tolerance: 10;  text-fill: #000;  text-halo-fill: #FFF;  text-halo-radius: 1;  text-dy: 0;  text-allow-overlap: false;  text-placement: point;  text-placement-type: simple;}"
+	  cartocss: "#sl_chiefdom_population_2014_merge4{   polygon-fill: #1a9850;   polygon-opacity: 0.6;   line-color: #FFF;   line-width: 1;   line-opacity: 1; } #sl_chiefdom_population_2014_merge4 [ jan18_jan24_vs_jan25_jan31 <= 10000] {    polygon-fill: #d73027; } #sl_chiefdom_population_2014_merge4 [ jan18_jan24_vs_jan25_jan31 <= 66] {    polygon-fill: #f79272; } #sl_chiefdom_population_2014_merge4 [ jan18_jan24_vs_jan25_jan31 <= 33] {    polygon-fill: #fed6b0; } #sl_chiefdom_population_2014_merge4 [ jan18_jan24_vs_jan25_jan31 <= 0] {    polygon-fill: #fff2cc; } #sl_chiefdom_population_2014_merge4 [ jan18_jan24_vs_jan25_jan31 <= -1] {    polygon-fill: #d2ecb4; } #sl_chiefdom_population_2014_merge4 [ jan18_jan24_vs_jan25_jan31 <= -33] {    polygon-fill: #8cce8a; } #sl_chiefdom_population_2014_merge4 [ jan18_jan24_vs_jan25_jan31 <= -66] {    polygon-fill: #1a9850; }                     #sl_chiefdom_population_2014_merge4::labels {  text-name: [Map label];  text-face-name: 'DejaVu Sans Book';  text-size: 11;  text-label-position-tolerance: 10;  text-fill: #000;  text-halo-fill: #FFF;  text-halo-radius: 1;  text-dy: 0;  text-allow-overlap: false;  text-placement: point;  text-placement-type: simple;}"
         },
 	{
-	  sql: "SELECT * FROM netfuse_inbound_calls_20150119_20150125",
-	  cartocss: "#netfuse_inbound_calls_20150119_20150125 {   marker-fill-opacity: 0.9;   marker-line-color: #FFF;   marker-line-width: 1.5;   marker-line-opacity: 1;   marker-placement: point;   marker-type: ellipse;   marker-width: 10;   marker-allow-overlap: true;}#netfuse_inbound_calls_20150119_20150125[type='death'] {   marker-fill: #081B47;}#netfuse_inbound_calls_20150119_20150125[type='suspect'] {   marker-fill: #a6cee3;}#netfuse_inbound_calls_20150119_20150125[type='sick'] {   marker-fill: #B2DF8A;}#netfuse_inbound_calls_20150119_20150125[type='quarantine'] {   marker-fill: #33A02C;}"
+	  sql: "SELECT * FROM report_2",
+	  cartocss: "#report_2 {   marker-fill-opacity: 0.9;   marker-line-color: #FFF;   marker-line-width: 1.5;   marker-line-opacity: 1;   marker-placement: point;   marker-type: ellipse;   marker-width: 10;   marker-allow-overlap: true;}#report_2[type='death'] {   marker-fill: #081B47;}#report_2[type='suspect'] {   marker-fill: #a6cee3;}#report_2[type='sick'] {   marker-fill: #B2DF8A;}#report_2[type='quarantine'] {   marker-fill: #33A02C;}"
 	},
 	{
 	  sql: "SELECT * FROM sl_ecf_update_17_01_15",
@@ -183,15 +183,15 @@
 		
 		createSelectorChoropleth(sublayers[0]);
 
-		cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), ['province', 'chiefdom', 'district', 'f2014_fema', 'f2014_male', 'f2014_tota', 'jan12_jan18', 'jan19_jan25'])		 
+		cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), ['province', 'chiefdom', 'district', 'f2014_fema', 'f2014_male', 'f2014_tota', 'jan18_jan24', 'jan25_jan31'])		 
 		
 		var legendCallType = new cdb.geo.ui.Legend({
            type: "custom",
            data: [
-            { name: "Death (Jan19-Jan25)", value: "#081B47" },
-            { name: "Suspect (Jan19-Jan25)", value: "#a6cee3" },
-            { name: "Sick (Jan19-Jan25)", value: "#B2DF8A" },
-            { name: "Quarantine (Jan19-Jan25)", value: "#33A02C" }
+            { name: "Death (jan25_jan31)", value: "#081B47" },
+            { name: "Suspect (jan25_jan31)", value: "#a6cee3" },
+            { name: "Sick (jan25_jan31)", value: "#B2DF8A" },
+            { name: "Quarantine (jan25_jan31)", value: "#33A02C" }
            ]
 		});
 		
@@ -220,7 +220,7 @@
 	  });
 	 
 	var layer_init = false ; 
-	var sql_global_type = "SELECT * FROM netfuse_inbound_calls_20150119_20150125 where type = 'empty' ";
+	var sql_global_type = "SELECT * FROM report_2 where type = 'empty' ";
 	var query = "";
 	
 	//Create call type selector
@@ -325,75 +325,54 @@ $('.button').bind( "click", checkclick );
   }
   </script>
 </head>
-
 <body onload="init()">
-
  <table border=0 width="100%" height="90%" celpadding=5>
-
-      <tr>
-        <td colspan=2 class="headerbar">
-          <img src="http://ehealthafrica.org/wp-content/uploads/styx/1345117248_eHealth_logo_h96.png" height=48>
-          <img src="http://www.netfuse.net/images/logo.png" style="float:right">
-        </td>
-      </tr>
-	  
-      <tr>
-        <td width="160" rowspan=2 valign=top>
-          <div id="controls" rowspan="2">
-
-	<div id="layer_selector" class="cartodb-infobox">
-      <ul>
-		<li data="all" class="selected">All districts</li>
-		<li data="Bo">Bo</li>
-		<li data="Bombali">Bombali</li>
-		<li data="Bonthe">Bonthe</li>
-		<li data="Kailahun">Kailahun</li>
-		<li data="Kambia">Kambia</li>
-		<li data="Kenema">Kenema</li>
-		<li data="Koinadugu">Koinadugu</li>
-		<li data="Kono">Kono</li>
-		<li data="Moyamba">Moyamba</li>
-		<li data="Port Loko">Port Loko</li>
-		<li data="Pujehun">Pujehun</li>
-		<li data="Tonkolili">Tonkolili</li>
-		<li data="Western Area Rur">Western Area Rural</li>
-		<li data="Western Area Urb">Western Area Urban</li>
-      </ul>
-    </div>	  
-
-    <div id="choropleth_selector" class="cartodb-infobox">
-      <ul>
-        <li data="calls">Call count (Jan12-18 vs Jan19-25)</li>
-        <li data="population">Total population</li>
-      </ul>
-    </div>
-	
-<!--             <b>Case types:</b><br />
-            <div id="legend"></div>
-            <br />
-
-            <b>Options:</b><br />
-            <input name="noise" type="checkbox">Noise</input>
-	    <br />
-	    <input name="heatmap" type="checkbox" checked onchange="ebolaMap.toggleLayer('heatmap')">Heatmap</input>
-
-	    <br />
-	    <br />
-            <div id="loading">LOADING</div> -->
-          </div>
-        </td>
-        <td width="" height="100%">	  
-
-  <div id='map'></div>
-   <div id='menu'>
-    <a href="#death" id="death" class="button death">Death</a> 
-	<a href="#sick" id="sick" class="button sick">Sick</a> 
-    <a href="#suspect" id="suspect" class="button suspect">Suspect</a> 
-    <a href="#quarantine" id="quarantine" class="button quarantine">Quarantine</a>
-  </div>
-   
-          </td>
-      </tr>
-    </table>
+  <tr>
+	<td colspan=2 class="headerbar">
+	  <img src="http://ehealthafrica.org/wp-content/uploads/styx/1345117248_eHealth_logo_h96.png" height=48>
+	  <img src="http://www.netfuse.net/images/logo.png" style="float:right">
+	</td>
+  </tr>  
+  <tr>
+	<td width="160" rowspan=2 valign=top>
+	<div id="controls" rowspan="2">
+		<div id="layer_selector" class="cartodb-infobox">
+		  <ul>
+			<li data="all" class="selected">All districts</li>
+			<li data="Bo">Bo</li>
+			<li data="Bombali">Bombali</li>
+			<li data="Bonthe">Bonthe</li>
+			<li data="Kailahun">Kailahun</li>
+			<li data="Kambia">Kambia</li>
+			<li data="Kenema">Kenema</li>
+			<li data="Koinadugu">Koinadugu</li>
+			<li data="Kono">Kono</li>
+			<li data="Moyamba">Moyamba</li>
+			<li data="Port Loko">Port Loko</li>
+			<li data="Pujehun">Pujehun</li>
+			<li data="Tonkolili">Tonkolili</li>
+			<li data="Western Area Rur">Western Area Rural</li>
+			<li data="Western Area Urb">Western Area Urban</li>
+		  </ul>
+		</div>	  
+		<div id="choropleth_selector" class="cartodb-infobox">
+		  <ul>
+			<li data="calls">Call count (jan18_jan24 vs jan25_jan31)</li>
+			<li data="population">Total population</li>
+		  </ul>
+		</div>
+	</div>
+    </td>
+    <td width="" height="100%">	  
+	  <div id='map'></div>
+	   <div id='menu'>
+		<a href="#death" id="death" class="button death">Death</a> 
+		<a href="#sick" id="sick" class="button sick">Sick</a> 
+		<a href="#suspect" id="suspect" class="button suspect">Suspect</a> 
+		<a href="#quarantine" id="quarantine" class="button quarantine">Quarantine</a>
+	  </div>
+	</td>
+  </tr>
+</table>
 </body>
 </html>
