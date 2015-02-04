@@ -27,8 +27,7 @@
       text-decoration: none;
       cursor: pointer;
     }
-    #menu a.selected,
-    #menu a:hover { 
+    #menu a.selected { 
       color: #F84F40;
     }
 	
@@ -221,58 +220,107 @@
 	  });
 	 
 	var layer_init = false ; 
-	var sql_global_type = 'SELECT * FROM netfuse_inbound_calls_20150119_20150125 where ';
+	var sql_global_type = "SELECT * FROM netfuse_inbound_calls_20150119_20150125 where type = 'empty' ";
+	var query = "";
+	
 	//Create call type selector
 	var LayerActions = {
 
 	  death: function(){
-	  if (layer_init == false) {
-	  	query = "type = 'death'";
-	  }else{
-	  	query = query + " OR type = 'death' ";
-	  }		
-		layer_init = true ;
-		sublayers[1].setSQL(sql_global_type + query);
-		//return true, layer_init;
-		return layer_init;
+
+		if (death_layer == true){
+  			query = query.replace(/OR type = 'death'/g,'');
+  			sublayers[1].setSQL(sql_global_type + query);
+  			$('.button.death').removeClass('selected');
+  			removelayer == "";
+  			death_layer = false;
+  		}else{
+  			query = query + " OR type = 'death' ";
+	  		sublayers[1].setSQL(sql_global_type + query);
+	  		death_layer = true ;
+		}	
+		
+		return death_layer;
+		
 	  },
 	  sick: function(){
-	  if (layer_init == false) {
-	  	query = "type = 'sick'";
-	  }else{
-	  	query = query + " OR type = 'sick' ";
-	  }
-		sublayers[1].setSQL(sql_global_type + query);
-		layer_init = true ;
-		return layer_init;
+	
+	if (sick_layer == true){
+  			query = query.replace(/OR type = 'sick'/g,'');
+  			sublayers[1].setSQL(sql_global_type + query);
+  			$('.button.sick').removeClass('selected');
+  			removelayer == "";
+  			sick_layer = false;
+  		}else{
+  			query = query + " OR type = 'sick' ";
+	  		sublayers[1].setSQL(sql_global_type + query);
+	  		sick_layer = true ;
+		}	
+		return sick_layer;
+	
 	  },
 	  suspect: function(){
-	  if (layer_init == false) {
-	  	query = "type = 'suspect'";
-	  }else{
-	  	query = query + " OR type = 'suspect' ";
-	  }
-		sublayers[1].setSQL(sql_global_type + query);
-		layer_init = true ;
-		return layer_init;
+		
+		if (suspect_layer == true){
+  			query = query.replace(/OR type = 'suspect'/g,'');
+  			sublayers[1].setSQL(sql_global_type + query);
+  			$('.button.suspect').removeClass('selected');
+  			removelayer == "";
+  			suspect_layer = false;
+  		}else{
+  			query = query + " OR type = 'suspect' ";
+	  		sublayers[1].setSQL(sql_global_type + query);
+			suspect_layer = true ;
+		}
+		
+		return suspect_layer;
+		
 	  },
 	  quarantine: function(){
-	  if (layer_init == false) {
-	  	query = "type = 'quarantine'";
-	  }else{
-	  	query = query + " OR type = 'quarantine' ";
-	  }
-		sublayers[1].setSQL(sql_global_type + query);
-		layer_init = true ;
-		return layer_init;
+	
+		if (quarantine_layer == true){
+  			query = query.replace(/OR type = 'quarantine'/g,'');
+  			sublayers[1].setSQL(sql_global_type + query);
+  			$('.button.quarantine').removeClass('selected');
+  			removelayer == "";
+  			quarantine_layer = false;
+  		}else{
+  			query = query + " OR type = 'quarantine' ";
+	  		sublayers[1].setSQL(sql_global_type + query);
+			quarantine_layer = true ;
+		}
+		
+		return quarantine_layer;
 		
 	  }
 	}	  
 	$('.button').click(function() {
-	  $('.button').removeClass('selected');
 	  $(this).addClass('selected');
 	  LayerActions[$(this).attr('id')]();
 	});
+	
+var removelayer = "";
+var sick_layer = false;
+var quarantine_layer = false;
+var suspect_layer = false;
+var death_layer = false;
+
+var checkclick = function() {
+  if (quarantine_layer == true){
+   removelayer = "quarantine";   
+  }
+  if (sick_layer == true){
+   removelayer = "sick";   
+  }
+  if (suspect_layer == true){
+   removelayer = "suspect";   
+  }
+  if (death_layer == true){
+   removelayer = "death";   
+  }
+};
+
+$('.button').bind( "click", checkclick );
 	
   }
   </script>
