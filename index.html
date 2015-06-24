@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta charset=utf-8 />
-<title>Ebola Emergency Hotline inbound calls</title>
+<title>Sierra Leone Telecommunication</title>
   <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.11/themes/css/cartodb.css" />
   <script src="http://libs.cartocdn.com/cartodb.js/v3/3.11/cartodb.js"></script>
   <script src='https://code.jquery.com/jquery-1.11.0.min.js'></script>
@@ -185,15 +185,7 @@
 
 		cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), ['province', 'chiefdom', 'district', 'f2014_fema', 'f2014_male', 'f2014_tota', 'jan18_jan24', 'jan25_jan31'])		 
 		
-		var legendCallType = new cdb.geo.ui.Legend({
-           type: "custom",
-           data: [
-            { name: "Death (jan25_jan31)", value: "#081B47" },
-            { name: "Suspect (jan25_jan31)", value: "#a6cee3" },
-            { name: "Sick (jan25_jan31)", value: "#B2DF8A" },
-            { name: "Quarantine (jan25_jan31)", value: "#33A02C" }
-           ]
-		});
+
 		
 		// creating legends and add legend to map
 		var legendIncrease = new cdb.geo.ui.Legend({
