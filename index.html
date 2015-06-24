@@ -102,7 +102,7 @@
 
 	var sublayers = [];
 
-	var sqlQuery = "SELECT cartodb_id, the_geom, the_geom_webmercator, chiefdom FROM geoserver_getfeature_1";
+	var sqlQuery = "SELECT * FROM geoserver_getfeature_1";
 	
   // create district selector
   function createSelectorDistrict(layer) {
@@ -339,37 +339,15 @@ $('.button').bind( "click", checkclick );
 		<div id="layer_selector" class="cartodb-infobox">
 		  <ul>
 			<li data="all" class="selected">All districts</li>
-			<li data="Bo">Bo</li>
-			<li data="Bombali">Bombali</li>
-			<li data="Bonthe">Bonthe</li>
-			<li data="Kailahun">Kailahun</li>
-			<li data="Kambia">Kambia</li>
-			<li data="Kenema">Kenema</li>
-			<li data="Koinadugu">Koinadugu</li>
-			<li data="Kono">Kono</li>
-			<li data="Moyamba">Moyamba</li>
-			<li data="Port Loko">Port Loko</li>
-			<li data="Pujehun">Pujehun</li>
-			<li data="Tonkolili">Tonkolili</li>
-			<li data="Western Area Rur">Western Area Rural</li>
-			<li data="Western Area Urb">Western Area Urban</li>
 		  </ul>
 		</div>	  
 		<div id="choropleth_selector" class="cartodb-infobox">
-		  <ul>
-			<li data="calls">Call count (jan18_jan24 vs jan25_jan31)</li>
-			<li data="population">Total population</li>
-		  </ul>
 		</div>
 	</div>
     </td>
     <td width="" height="100%">	  
 	  <div id='map'></div>
 	   <div id='menu'>
-		<a href="#death" id="death" class="button death">Death</a> 
-		<a href="#sick" id="sick" class="button sick">Sick</a> 
-		<a href="#suspect" id="suspect" class="button suspect">Suspect</a> 
-		<a href="#quarantine" id="quarantine" class="button quarantine">Quarantine</a>
 	  </div>
 	</td>
   </tr>
