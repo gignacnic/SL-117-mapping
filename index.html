@@ -102,7 +102,7 @@
 
 	var sublayers = [];
 
-	var sqlQuery = "SELECT cartodb_id, the_geom, the_geom_webmercator, province, chiefdom, district, f2014_Fema, f2014_Male, f2014_Tota, jan18_jan24, jan25_jan31, COALESCE(((jan25_jan31-jan18_jan24)*100)/nullif(jan18_jan24, 0), 0) AS \"jan18_jan24_vs_jan25_jan31\", CONCAT(chiefdom,': ', COALESCE(((jan25_jan31-jan18_jan24)*100)/nullif(jan18_jan24, 0), 0),'%') AS \"Map label\" FROM sl_chiefdom_population_2014_merge4";
+	var sqlQuery = "SELECT cartodb_id, the_geom, the_geom_webmercator, chiefdom FROM geoserver_getfeature_1";
 	
   // create district selector
   function createSelectorDistrict(layer) {
